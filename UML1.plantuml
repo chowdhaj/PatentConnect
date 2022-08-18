@@ -1,0 +1,40 @@
+@startuml
+skinparam linetype ortho
+
+left to right direction
+
+title InformationInterface
+
+[*] --> GetPatentInfo : Initialize with PatentDB and Patent
+
+GetPatentInfo : entry \ given a patent database and a patent\ndo \ read patent information from Google Patents\nexit \ when all of the patent data is read
+GetPatentInfo -> Display
+
+Display : entry \ given patent information \ndo \ display information\nexit \ when everything is displayed
+Display -> Standby
+
+Standby -> PictureHover
+Standby -> TextBox
+Standby -> OpenGraph
+Standby -> CleanUp
+
+
+PictureHover: entry \ mouse hovers over picture\nexit \ mouse stops hovering over picture
+PictureHover -> ScrollImage
+PictureHover -> OpenImage
+
+ScrollImage: entry \ mouse scroll wheel hit\n do \ cycle the picture up or down depending on scroll direction, up to the first or last thumbnail\n exit \ after the picture is cycled
+ScrollImage -> PictureHover
+
+OpenImage: entry \ mouse clicks on picture\n do \open the picture using system's picture viewer\nexit \ when the picture is displayed
+OpenImage -> PictureHover
+
+TextBox: entry \ User changes text in the textbox \n do \ display the text in the textbox\n exit \ once the text is displayed
+TextBox -> Standby
+
+OpenGraph: entry \ User clicks on connect patents button\ndo \ open the GraphInterface window and pass it the text entered\n exit \ once the GraphInterface window is opened
+OpenGraph -> Standby
+
+CleanUp: entry \ X button clicked\ndo \ delete all pictures and close window \n exit \ when the window is closed
+CleanUp -> [*]
+@enduml

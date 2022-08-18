@@ -1,0 +1,219 @@
+@startuml Design2
+
+title PatentConnectClassRelation
+
+skinparam classStyle uml2
+
+allow_mixing
+
+
+left to right direction
+
+skinparam linetype ortho
+
+skinparam classBorderThickness .5
+skinparam packageBorderThickness .2
+skinparam shadowing false
+
+package "com" as package_com  {
+    package "com.backend"  as package_com_backend #EEEEEE {
+        package "com.backend.db"  as package_com_backend_db  {
+            
+
+            package "com.data" <<FileSystem Folder>> as package_com_data #DDDDDD {
+                file "cit-Patents" as citPatents {
+
+                }
+
+                file "small-cit-Patents" as smallcitPatents {
+
+                }
+            }
+            
+            class "MergeSort" as MergeSort {
+
+            }
+
+            class "CitationPath" as CitationPath {
+
+            } 
+
+            class "CitationRecord" as CitationRecord {
+
+            }
+
+            class "Patent" as Patent {
+
+            }
+
+            class "PatentDatabase" as PatentDatabase {
+
+            }
+
+            class "PatentFileParsingReader" as PatentFileParsingReader {
+
+            }
+
+            package_com_data -[hidden]up-> PatentFileParsingReader
+
+            package "com.backend.db.global"  as package_com_backend_global #DDDDDD {
+                class "PregenSettings" as PregenSettings {
+
+                }
+            
+            }
+
+            package "com.backend.db.googleapi"  as package_com_backend_googleapi #DDDDDD {
+                class "GooglePatents" as GooglePatents {
+
+                }
+
+                cloud GoogleAPI {
+
+                }
+            }
+
+        }
+
+    }
+
+    package "com.gui"  as package_com_gui #EEEEEE {
+        class "GraphInterface" as GraphInterface {
+
+        }
+
+        class "InformationInterface" as InformationInterface {
+
+        }
+
+        class "Node" as Node {
+
+        }
+
+        class "SearchInterface" as SearchInterface {
+
+        }
+    }
+
+    package "com.tools"  as package_com_tools #EEEEEE {
+        class "ImageLoader" as ImageLoader {
+
+        }
+
+        class "InformationGlobal" as InformationGlobal {
+
+        }
+
+        class "OpenBrowser" as OpenBrowser {
+
+        }
+
+        class "Parser" as Parser {
+
+        }
+
+        class "TextPrompt" as TextPrompt {
+
+        }
+    }
+
+
+    package "com.junit"  as package_com_junit #EEEEEE {
+        class "AllTests" as AllTests {
+
+        }
+
+        class "CitationRecordTest" as CitationRecordTest {
+
+        }
+
+        class "GooglePatentsTest" as GooglePatentsTest {
+
+        }
+
+        class "ImageLoaderTest" as ImageLoaderTest {
+
+        }
+
+        class "ParserTest" as ParserTest {
+
+        }
+
+        class "StatusTest" as StatusTest {
+
+        }
+    }
+}
+
+package_com_tools -[hidden]left- package_com_gui
+    
+package_com_gui --[hidden]up-- package_com_backend
+
+citPatents -o PatentFileParsingReader
+
+PatentFileParsingReader o-- CitationRecord
+
+hide  CirationRecord
+
+hide  Valen
+Valen -down[hidden]- PatentDatabase
+
+
+PatentFileParsingReader -[hidden]up- CirationRecord
+
+
+PatentDatabase -[hidden]-> PatentFileParsingReader
+PatentDatabase -> MergeSort
+
+CitationPath -down-> PatentDatabase
+CitationPath -> PregenSettings
+
+
+CitationRecord -down-o PatentDatabase
+
+SearchInterface -> PatentDatabase
+
+PatentDatabase o-- Patent
+
+SearchInterface -> InformationInterface
+
+InformationInterface -> GraphInterface
+ImageLoader <- InformationInterface
+ImageLoader <- GraphInterface
+
+GraphInterface -[hidden]- InformationInterface
+
+ImageLoader -[hidden]left- TextPrompt
+SearchInterface ----> ImageLoader
+
+InformationInterface -> InformationGlobal
+GraphInterface -> InformationGlobal
+SearchInterface -> InformationGlobal
+
+
+
+InformationInterface -> OpenBrowser
+SearchInterface -> OpenBrowser
+
+InformationInterface -> Parser
+SearchInterface -> Parser
+
+InformationInterface -> TextPrompt
+SearchInterface -> TextPrompt
+
+TextPrompt --[hidden]down--Parser
+TextPrompt --[hidden]down--OpenBrowser
+
+InformationInterface -> PatentDatabase
+InformationInterface -> Patent
+InformationInterface -> GooglePatents
+
+GooglePatents ...> GoogleAPI : access
+
+GraphInterface -> InformationInterface
+GraphInterface -> Node
+GraphInterface -> PatentDatabase
+
+InformationInterface -> CitationPath
+
+@enduml
